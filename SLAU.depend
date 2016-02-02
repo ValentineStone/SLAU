@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1454442205 source:c:\users\valentine\desktop\slau\main.cpp
+	<iostream>
+	"slau.hpp"
+
+1454442167 c:\users\valentine\desktop\slau\slau.hpp
+	<vector>
+	<iostream>
+	<cstdlib>
+	<ctime>
+
