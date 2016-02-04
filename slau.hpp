@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <cstdio>
 #include <cstdlib>
 #include <ctime>
 
@@ -9,7 +10,7 @@
 class slau
 {
 private:
-    unsigned int height = 0;
+    int height = 0;
 
     // Ax = b
 
@@ -45,23 +46,27 @@ public:
 
         for (int i = 0; i < height; i++)
         {
+            std::cout << "( ";
+
             for (int j = 0; j < height; j++)
             {
-                std::cout << A[i][j] << ' ';
+                std::printf("% .1E ", A[i][j]);
             }
 
-            std::cout << "   *    ";
+            std::cout << ") * (";
 
             if (is_solved)
             {
-               std::cout << x[i];
+               std::printf("% .1E ", x[i]);
             }
             else
             {
-                std::cout << 'x' << i;
+                std::printf("x%-7d ", i);
             }
 
-            std::cout << "    =    " << b[i] << '\n';
+            std::cout << ") = (";
+            std::printf("% .1E ", b[i]);
+            std::cout << ")\n";
         }
     }
 
@@ -73,18 +78,85 @@ public:
         {
             for (int j = 0; j < height; j++)
             {
-                A[i][j] = std::rand() % 10;
+                A[i][j] = (std::rand() % 2 ? 1 : -1) * (std::rand() / (double)RAND_MAX);
             }
 
-            b[i] = std::rand() % 10;
+            b[i] = (std::rand() % 2 ? 1 : -1) * (std::rand() / (double)RAND_MAX);
         }
     }
 
     void solve()
     {
+        if (!height) std::cout << "Can't solve that: empty vector.\n";
 
+        std::vector<std::vector<double>> A_calculated = A;
+        std::vector<double> b_calculated = b;
+
+        double devider;
+        double multiplier;
+
+        for (int i = 0; i < height; i++)
+        {
+            devider = A_calculated[i][i];
+
+            for (int j = 0; j < height; j++)
+            {
+                if (j == i) continue;
+
+                multiplier = A_calculated[j][i] / devider;
+
+                for (int k = 0; k < height; k++)
+                {
+                    A_calculated[j][k] -= A_calculated[i][k] * multiplier;
+                }
+
+                b_calculated[j] -= b_calculated[i] * multiplier;
+            }
+        }
+
+        for (int i = 0; i < height; i++)
+        {
+            x[i] = b_calculated[i] / A_calculated[i][i];
+        }
+
+        is_solved = true;
+
+        print();
     }
 
+    void check()
+    {
+        if (!is_solved || !height)
+        {
+            std::cout << "Not solved yet.";
+            return;
+        }
+
+        std::vector<double> b_calculated;
+
+        b_calculated.resize(height);
+
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < height; j++)
+            {
+                b_calculated[i] += A[i][j] * x[j];
+            }
+        }
+
+
+        std::cout
+            << "|          ORIGINAL          |         CALCULATED         |         DIFFERENCE         |\n"
+            << "|----------------------------|----------------------------|----------------------------|\n";
+        for (int i = 0; i < height; i++)
+        {
+            std::printf("|% .20E", b[i]);
+            std::cout << " |";
+            std::printf("% .20E", b_calculated[i]);
+            std::cout << " |";
+            std::printf("% .20E |\n", b[i] - b_calculated[i]);
+        }
+    }
 };
 
 
