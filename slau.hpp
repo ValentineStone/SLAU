@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 
 #ifndef SLAU_HPP_INCLUDED
 #define SLAU_HPP_INCLUDED
@@ -61,7 +62,7 @@ public:
             }
             else
             {
-                std::printf("x%-7d ", i);
+                std::printf(" x%-6d ", i);
             }
 
             std::cout << ") = (";
@@ -136,14 +137,27 @@ public:
 
         b_calculated.resize(height);
 
+        std::vector<double> b_difference;
+
+        b_difference.resize(height);
+
+        double difference_lenght = 0;
+
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < height; j++)
             {
                 b_calculated[i] += A[i][j] * x[j];
             }
+
+            b_difference[i] = b[i] - b_calculated[i];
+
+            difference_lenght += b_difference[i] * b_difference[i];
         }
 
+        difference_lenght += std::pow(difference_lenght, 0.5);
+
+        std::cout << "Difference lenght: " << difference_lenght << "\n\n";
 
         std::cout
             << "|          ORIGINAL          |         CALCULATED         |         DIFFERENCE         |\n"
@@ -154,7 +168,7 @@ public:
             std::cout << " |";
             std::printf("% .20E", b_calculated[i]);
             std::cout << " |";
-            std::printf("% .20E |\n", b[i] - b_calculated[i]);
+            std::printf("% .20E |\n", b_difference[i]);
         }
     }
 };
