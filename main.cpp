@@ -1,80 +1,115 @@
 #include <iostream>
+#include <string>
 #include "slau.hpp"
 
-int edit(slau*);
+void prompt();
 
 int main()
 {
-    std::cout << "Welcome to the best SLAU solver ever!\n\n";
+    std::cout << "Welcome to the best SLAU solver ever!\n";
 
-    std::cout << "How many equations we require?: ";
+    prompt();
 
-    int height;
-
-    std::cin >> height;
-
-
-
-    slau* problem = new slau(height);
-
-    problem->randomize();
-
-    std::cout << "Here is your randomized SLAU:\n\n";
-
-    problem->print();
-
-
-
-    std::cout << "\nWanna change it? (y/n): ";
-
-    char reply;
-    bool is_input_valid = false;
-
-    while (!is_input_valid)
-    {
-        std::cin >> reply;
-
-        switch (reply)
-        {
-            case 'y':
-            case 'Y':
-            {
-                edit(problem);
-                is_input_valid = true;
-                break;
-            }
-            case 'n':
-            case 'N':
-            {
-                is_input_valid = true;
-                break;
-            }
-            default:
-            {
-                std::cout << "Unsure what you ment, wanna change the matrix? (y/n): ";
-            }
-        }
-    }
-
-
-
-    std::cout << "\nHere is how we solved it:\n\n";
-
-    problem->solve();
-
-
-
-    std::cout << "\nHere is how we checked it:\n\n";
-
-    problem->check();
-
-
+    std::cout << "Thanks for using Leonid Solution's SLAU solver!\n";
 
     return 0;
 }
 
-int edit(slau* _problem)
+void prompt()
 {
-    std::cout << "Changed it!\n\n";
-    return 0;
+    slau* problem = new slau(0);
+
+    while (true)
+    {
+        std::cout << "$ ";
+
+        std::string command;
+
+        std::cin >> command;
+
+        if (command == "exit")
+        {
+            return;
+        }
+
+        else if (command == "print")
+        {
+            problem->print();
+        }
+
+        else if (command == "new")
+        {
+            int height;
+
+            std::cin >> height;
+
+            delete problem;
+            problem = new slau(height);
+        }
+
+        else if (command == "randomize")
+        {
+            problem->randomize();
+        }
+
+        else if (command == "solve")
+        {
+            problem->solve();
+        }
+
+        else if (command == "check")
+        {
+            problem->check();
+        }
+
+        else if (command == "change")
+        {
+            std::string target;
+
+            std::cin >> target;
+
+            if (target == "A")
+            {
+                int line;
+                int item;
+                double value;
+
+                std::cin >> line >> item >> value;
+
+                if (line >= problem->size() || item >= problem->size())
+                {
+                        std::cout << "Indexes out of range!\n";
+                        continue;
+                }
+
+                std::cout << "Changing A at (" << line << ',' << item << ") from " << problem->get_A(line, item) << " to " << value << '\n';
+
+                problem->change_A(line, item, value);
+            }
+            else if (target == "b")
+            {
+                int item;
+                double value;
+
+                std::cin >> item >> value;
+
+                if (item >= problem->size())
+                {
+                        std::cout << "Index out of range!\n";
+                        continue;
+                }
+
+                std::cout << "Changing b at (" << item << ") from " << problem->get_b(item) << " to " << value << '\n';
+
+                problem->change_b(item, value);
+            }
+        }
+
+        else
+        {
+            std::cout << "Unknown command \"" << command << "\", use \"exit\" to exit\n";
+        }
+
+    }
+    return;
 }

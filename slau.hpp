@@ -39,7 +39,30 @@ public:
 
     }
 
+    void change_A(int _line, int _item, double _value)
+    {
+        A[_line][_item] = _value;
+    }
 
+    void change_b(int _item, double _value)
+    {
+        b[_item] = _value;
+    }
+
+    double get_A(int _line, int _item)
+    {
+        return A[_line][_item];
+    }
+
+    double get_b(int _item)
+    {
+        return b[_item];
+    }
+
+    int size()
+    {
+        return height;
+    }
 
     void print()
     {
