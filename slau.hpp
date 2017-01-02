@@ -4,9 +4,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
+#include "matrix.hpp"
 
-#ifndef SLAU_HPP_INCLUDED
-#define SLAU_HPP_INCLUDED
+#ifndef _SLAU_HPP
+#define _SLAU_HPP
 
 class slau
 {
@@ -16,10 +17,12 @@ private:
     // Ax = b
 
     std::vector<std::vector<double>> A;
+    std::vector<std::vector<double>> A_reversed;
     std::vector<double> b;
     std::vector<double> x;
 
     bool is_solved = false;
+    double worth;
 
 public:
 
@@ -111,6 +114,7 @@ public:
 
     void solve()
     {
+        /*
         if (!height) std::cout << "Can't solve that: empty vector.\n";
 
         std::vector<std::vector<double>> A_calculated = A;
@@ -142,10 +146,27 @@ public:
         {
             x[i] = b_calculated[i] / A_calculated[i][i];
         }
+        */
+
+        std::vector< std::vector<double> > matrix = A;
+
+        matrix::make_diagonal_matrix(A_reversed, A.size());
+
+        matrix::attach(matrix, A_reversed);
+        matrix::attach(matrix, b);
+
+        matrix::solve(matrix);
+
+        //matrix::print(matrix);
+
+        matrix::extract_colomn(matrix, matrix[0].size() - 1, x);
+        matrix::extract_matrix(matrix, matrix.size(), matrix.size(), A_reversed);
+
+        matrix::determine_worth(A, A_reversed);
 
         is_solved = true;
 
-        print();
+        if (height < 5) print();
     }
 
     void check()
@@ -197,4 +218,4 @@ public:
 };
 
 
-#endif // SLAU_HPP_INCLUDED
+#endif _SLAU_HPP

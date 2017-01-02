@@ -19,6 +19,17 @@ void prompt()
 {
     slau* problem = new slau(0);
 
+    /*
+    delete problem;
+    problem = new slau(4);
+    problem->randomize();
+    problem->print();
+    problem->solve();
+
+    std::cin.ignore();
+    return;
+    */
+
     while (true)
     {
         std::cout << "$ ";
@@ -47,9 +58,21 @@ void prompt()
             problem = new slau(height);
         }
 
-        else if (command == "randomize")
+        else if (command == "rand")
         {
             problem->randomize();
+        }
+
+        else if (command == "rnew")
+        {
+            int height;
+
+            std::cin >> height;
+
+            delete problem;
+            problem = new slau(height);
+            problem->randomize();
+            if (height < 5) problem->print();
         }
 
         else if (command == "solve")

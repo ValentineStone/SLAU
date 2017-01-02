@@ -25,6 +25,7 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="main.cpp" />
+		<Unit filename="matrix.hpp" />
 		<Unit filename="slau.hpp" />
 		<Extensions>
 			<code_completion />
